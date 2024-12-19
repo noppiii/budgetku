@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: BudgetKu
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my-wallet
+    username: postgres
+    password: NOVIANTO
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+app:
+  security:
+    token:
+      secret: 09b93c47-507a-4d2d-9e07-8be3e4d57a3e
+    jwt:
+      expiration: 3000
+      reset:
+        password:
+          expiration: 3600000
+      refresh-token:
+        expiration: 9904800000
+
+#kafka:
+#  bootstrap-servers: localhost:9092
+
+server:
+  port: 8081
