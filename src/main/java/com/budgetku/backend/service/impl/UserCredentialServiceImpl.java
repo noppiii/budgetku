@@ -1,6 +1,8 @@
 package com.budgetku.backend.service.impl;
 
+import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.UserCredentialValidationException;
+import com.budgetku.backend.exception.UserNotFoundException;
 import com.budgetku.backend.mapper.UserDTOMapper;
 import com.budgetku.backend.model.User;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
@@ -35,5 +37,24 @@ public class UserCredentialServiceImpl implements UserCredentialService {
         User newUser = userDTOMapper.toEntity(userCredentialRequest, passwordEncoder);
         userRepository.save(newUser);
         return userDTOMapper.toDTO(jwtService.generateToken(newUser), jwtService.generateRefreshToken(newUser), newUser.getId());
+    }
+
+    @Override
+    public UserCredentialRequest update(UserCredentialRequest userCredentialRequest) throws UserCredentialValidationException, InvalidPasswordException, UserNotFoundException {
+        User existingUser = userRepository.findById(userCredentialRequest.getId())
+                .orElseThrow(() -> new UserNotFoundException(userCredentialRequest.getId()));
+
+        if (!passwordEncoder.matches(userCredentialRequest.getPassword(), existingUser.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        UserCredentialValidator.validateUserCredentialUpdate(userCredentialRequest, userRepository);
+
+        if (userCredentialRequest.getNewPassword() != null) {
+            userDTOMapper.updateFromDTO(userCredentialRequest, existingUser, passwordEncoder);
+        } else {
+            userDTOMapper.updateFromDTO(userCredentialRequest, existingUser);
+        }
+        return userDTOMapper.toDTO(userRepository.save(existingUser));
     }
 }
