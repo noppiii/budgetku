@@ -4,6 +4,7 @@ import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.UserCredentialValidationException;
 import com.budgetku.backend.exception.UserNotFoundException;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
+import com.budgetku.backend.payload.request.user.UserDeleteRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
 import com.budgetku.backend.service.UserCredentialService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +47,20 @@ public class UserCredentialController {
     @PutMapping("/update")
     public ResponseEntity<UserCredentialRequest> update(@Valid @RequestBody @Parameter(description = "Updated user credentials data") UserCredentialRequest userCredentialRequest) throws UserCredentialValidationException, InvalidPasswordException, UserNotFoundException {
         return ResponseEntity.ok(userCredentialService.update(userCredentialRequest));
+    }
+
+    @Operation(summary = "Delete a user account",
+            description = "Delete an existing user account by providing the user's credentials.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid user data or password mismatch"),
+            @ApiResponse(responseCode = "404", description = "User ID not found")
+    })
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@Valid @RequestBody @Parameter(description = "User credentials to delete the account") UserDeleteRequest deleteRequest) throws InvalidPasswordException, UserNotFoundException {
+        userCredentialService.delete(deleteRequest);
+        return ResponseEntity.ok().build();
     }
 
 }

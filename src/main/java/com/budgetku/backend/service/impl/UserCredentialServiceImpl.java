@@ -6,6 +6,7 @@ import com.budgetku.backend.exception.UserNotFoundException;
 import com.budgetku.backend.mapper.UserDTOMapper;
 import com.budgetku.backend.model.User;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
+import com.budgetku.backend.payload.request.user.UserDeleteRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
 import com.budgetku.backend.repository.UserRepository;
 import com.budgetku.backend.security.JwtService;
@@ -56,5 +57,17 @@ public class UserCredentialServiceImpl implements UserCredentialService {
             userDTOMapper.updateFromDTO(userCredentialRequest, existingUser);
         }
         return userDTOMapper.toDTO(userRepository.save(existingUser));
+    }
+
+    @Override
+    public void delete(UserDeleteRequest deleteRequest) throws InvalidPasswordException, UserNotFoundException {
+        User existingUser = userRepository.findById(deleteRequest.getId())
+                .orElseThrow(() -> new UserNotFoundException(deleteRequest.getId()));
+
+        if (!passwordEncoder.matches(deleteRequest.getPassword(), existingUser.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        userRepository.delete(existingUser);
     }
 }
