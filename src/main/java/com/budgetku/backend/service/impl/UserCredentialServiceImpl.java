@@ -1,13 +1,17 @@
 package com.budgetku.backend.service.impl;
 
+import com.budgetku.backend.exception.EmailNotFoundException;
 import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.UserCredentialValidationException;
 import com.budgetku.backend.exception.UserNotFoundException;
 import com.budgetku.backend.mapper.UserDTOMapper;
+import com.budgetku.backend.model.PasswordResetToken;
 import com.budgetku.backend.model.User;
+import com.budgetku.backend.model.enumType.UserStatus;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
 import com.budgetku.backend.payload.request.user.UserDeleteRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
+import com.budgetku.backend.repository.PasswordResetTokenRepository;
 import com.budgetku.backend.repository.UserRepository;
 import com.budgetku.backend.security.JwtService;
 import com.budgetku.backend.service.UserCredentialService;
@@ -16,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -26,6 +31,7 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     private final PasswordEncoder passwordEncoder;
     private final UserDTOMapper userDTOMapper;
     private final JwtService jwtService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public Optional<User> findByNif(String nif) {
@@ -69,5 +75,10 @@ public class UserCredentialServiceImpl implements UserCredentialService {
         }
 
         userRepository.delete(existingUser);
+    }
+
+    @Override
+    public UserStatus getUserStatus(String nif) {
+        return userRepository.findByNif(nif).map(User::getStatus) .orElse(UserStatus.LOGGED_OUT);
     }
 }

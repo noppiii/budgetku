@@ -1,8 +1,10 @@
 package com.budgetku.backend.controller;
 
+import com.budgetku.backend.exception.EmailNotFoundException;
 import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.UserCredentialValidationException;
 import com.budgetku.backend.exception.UserNotFoundException;
+import com.budgetku.backend.model.enumType.UserStatus;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
 import com.budgetku.backend.payload.request.user.UserDeleteRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
@@ -61,6 +63,19 @@ public class UserCredentialController {
     public ResponseEntity<Void> delete(@Valid @RequestBody @Parameter(description = "User credentials to delete the account") UserDeleteRequest deleteRequest) throws InvalidPasswordException, UserNotFoundException {
         userCredentialService.delete(deleteRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(
+            summary = "Retrieve the user's status (logged in or logged out)",
+            description = "This method checks the current status of the user, whether they are logged in or logged out based on their nif.",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User status fetched successfully"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            })
+    @GetMapping("/status")
+    public ResponseEntity<UserStatus> getUserStatus(@RequestParam("nif") @Parameter(description = "The user's NIF to check their current login status", required = true) String nif) {
+        return ResponseEntity.ok(userCredentialService.getUserStatus(nif));
     }
 
 }
