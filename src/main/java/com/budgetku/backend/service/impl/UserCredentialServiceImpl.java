@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +81,10 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     @Override
     public UserStatus getUserStatus(String nif) {
         return userRepository.findByNif(nif).map(User::getStatus) .orElse(UserStatus.LOGGED_OUT);
+    }
+
+    @Override
+    public UserCredentialRequest findById(UUID id) throws UserNotFoundException {
+        return userDTOMapper.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 }

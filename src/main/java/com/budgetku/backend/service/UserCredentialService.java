@@ -11,6 +11,7 @@ import com.budgetku.backend.payload.request.user.UserDeleteRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserCredentialService {
 
@@ -23,4 +24,6 @@ public interface UserCredentialService {
     void delete(UserDeleteRequest deleteRequest) throws InvalidPasswordException, UserNotFoundException;
 
     UserStatus getUserStatus(String nif);
+
+    UserCredentialRequest findById(UUID id) throws UserNotFoundException;
 }
