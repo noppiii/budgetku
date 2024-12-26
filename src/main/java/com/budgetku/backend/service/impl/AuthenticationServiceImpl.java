@@ -14,12 +14,14 @@ import com.budgetku.backend.service.AuthenticationService;
 import com.budgetku.backend.service.UserCredentialService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 import static com.budgetku.backend.model.enumType.UserStatus.LOGGED_IN;
+import static com.budgetku.backend.model.enumType.UserStatus.LOGGED_OUT;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +52,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User user = userCredentialService.findByNif(nif).orElseThrow(() -> new NifNotFoundException(nif));
         return userDTOMapper.toDTOWithoutUserID(jwtService.generateToken(user), refreshToken);
+    }
+
+    @Override
+    public void signOut(HttpServletRequest request) throws NifNotFoundException {
+        String nif = jwtService.extractNif(request.getHeader("Authorization")).replace("Bearer ", "");
+        User user = userCredentialService.findByNif(nif).orElseThrow(() -> new NifNotFoundException(nif));
+        user.setStatus(LOGGED_OUT);
+        userCredentialService.save(user);
+        SecurityContextHolder.clearContext();
     }
 }

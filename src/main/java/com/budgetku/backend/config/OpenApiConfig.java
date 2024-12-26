@@ -7,21 +7,24 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "M. Novianto Amggoro",
+                        name = "M. Novianto Anggoro",
                         email = "mnoviantoanggoro@gmail.com"
                 ),
-                description = "OpenApi documentation for BudgetKu",
-                title = "OpenApi specification BudgetKu",
+                description = "API documentation for the BudgetKu Platform",
+                title = "BudgetKu Platform API",
                 version = "1.0"
         ),
         servers = {
                 @Server(
-                        description = "Local env",
-                        url = "http://localhost:8080"
+                        description = "Local Environment",
+                        url = "http://localhost:8081"
                 )
         }
 )
@@ -33,5 +36,14 @@ import io.swagger.v3.oas.annotations.servers.Server;
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER
 )
+@Configuration
 public class OpenApiConfig {
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("BudgetKu")
+                .pathsToMatch("/api/**")
+                .build();
+    }
 }

@@ -15,4 +15,6 @@ public interface AuthenticationService {
     AuthenticationResponse signIn(SignInRequest signInRequest) throws InvalidPasswordException, UserNotFoundException, EmailNotFoundException;
 
     AuthenticationResponse refreshToken(HttpServletRequest request) throws IOException, UserNotFoundException, NifNotFoundException;
+
+    void signOut(HttpServletRequest request) throws NifNotFoundException;
 }
