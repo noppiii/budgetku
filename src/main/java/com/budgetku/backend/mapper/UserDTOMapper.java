@@ -20,6 +20,9 @@ public interface UserDTOMapper {
     @Mapping(target = "password", expression = "java(encodePassword(userCredentialRequest.getPassword(), passwordEncoder))")
     User toEntity(UserCredentialRequest userCredentialRequest, @Context PasswordEncoder passwordEncoder);
 
+    @Mapping(target = "id", ignore = true)
+    AuthenticationResponse toDTOWithoutUserID(String token, String refreshToken);
+
     AuthenticationResponse toDTO(String token, String refreshToken, UUID id);
 
     AuthenticationResponse toDTO(String token, String refreshToken, UUID id, String nif, String firstName);
