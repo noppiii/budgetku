@@ -87,4 +87,14 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     public UserCredentialRequest findById(UUID id) throws UserNotFoundException {
         return userDTOMapper.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }

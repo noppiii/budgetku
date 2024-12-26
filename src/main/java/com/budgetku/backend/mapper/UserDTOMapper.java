@@ -22,6 +22,8 @@ public interface UserDTOMapper {
 
     AuthenticationResponse toDTO(String token, String refreshToken, UUID id);
 
+    AuthenticationResponse toDTO(String token, String refreshToken, UUID id, String nif, String firstName);
+
     @Mapping(target = "password", expression = "java(encodePassword(userCredentialRequest.getNewPassword(), passwordEncoder))")
     void updateFromDTO(UserCredentialRequest userCredentialRequest, @MappingTarget User entity, @Context PasswordEncoder passwordEncoder);
 

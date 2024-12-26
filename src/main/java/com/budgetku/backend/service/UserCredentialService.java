@@ -26,4 +26,8 @@ public interface UserCredentialService {
     UserStatus getUserStatus(String nif);
 
     UserCredentialRequest findById(UUID id) throws UserNotFoundException;
+
+    Optional<User> findByEmail(String email);
+
+    void save(User user);
 }
