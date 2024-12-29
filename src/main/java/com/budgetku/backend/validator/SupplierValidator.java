@@ -27,6 +27,18 @@ public class SupplierValidator {
         }
     }
 
+    public void validateSupplierUpdate(SupplierRequest supplierRequest, SupplierRepository repository) throws SupplierValidationException {
+        List<String> errorMessages = new ArrayList<>();
+        validateNifForExistingSupplierUpdate(supplierRequest, repository, errorMessages);
+        validateEmailForExistingSupplierUpdate(supplierRequest, repository, errorMessages);
+        validatePhoneNumberForExistingSupplierUpdate(supplierRequest, repository, errorMessages);
+        validateCompanyNameForExistingSupplierUpdate(supplierRequest, repository, errorMessages);
+
+        if (!errorMessages.isEmpty()) {
+            throw new SupplierValidationException(errorMessages);
+        }
+    }
+
     private static void validateNifForExistingSupplier(SupplierRequest supplierRequest, SupplierRepository repository, List<String> errorMessages) {
         log.info("Checking for existing NIF: {}", supplierRequest.getNif());
 
@@ -58,6 +70,42 @@ public class SupplierValidator {
         log.info("Checking for existing company name: {}", supplierRequest.getCompanyName());
 
         if (repository.existsByCompanyName(supplierRequest.getCompanyName())) {
+            errorMessages.add("This company name already exists: " + supplierRequest.getCompanyName());
+            log.error("Validation failed: Company name already exists. Company name: {}", supplierRequest.getCompanyName());
+        }
+    }
+
+    private static void validateNifForExistingSupplierUpdate(SupplierRequest supplierRequest, SupplierRepository repository, List<String> errorMessages) {
+        log.info("Checking for existing NIF (update): {}", supplierRequest.getNif());
+
+        if (repository.existsByNifAndIdNot(supplierRequest.getNif(), supplierRequest.getId())) {
+            errorMessages.add("NIF already exists: " + supplierRequest.getNif());
+            log.error("Validation failed: NIF already exists. NIF: {}", supplierRequest.getNif());
+        }
+    }
+
+    private static void validateEmailForExistingSupplierUpdate(SupplierRequest supplierRequest, SupplierRepository repository, List<String> errorMessages) {
+        log.info("Checking for existing email (update): {}", supplierRequest.getEmail());
+
+        if (repository.existsByEmailAndIdNot(supplierRequest.getEmail(), supplierRequest.getId())) {
+            errorMessages.add("Email already exists: " + supplierRequest.getEmail());
+            log.error("Validation failed: Email already exists. Email: {}", supplierRequest.getEmail());
+        }
+    }
+
+    private static void validatePhoneNumberForExistingSupplierUpdate(SupplierRequest supplierRequest, SupplierRepository repository, List<String> errorMessages) {
+        log.info("Checking for existing phone number (update): {}", supplierRequest.getPhoneNumber());
+
+        if (repository.existsByPhoneNumberAndIdNot(supplierRequest.getPhoneNumber(), supplierRequest.getId())) {
+            errorMessages.add("This phone number already exists: " + supplierRequest.getPhoneNumber());
+            log.error("Validation failed: Phone number already exists. Phone number: {}", supplierRequest.getPhoneNumber());
+        }
+    }
+
+    private static void validateCompanyNameForExistingSupplierUpdate(SupplierRequest supplierRequest, SupplierRepository repository, List<String> errorMessages) {
+        log.info("Checking for existing company name (update): {}", supplierRequest.getCompanyName());
+
+        if (repository.existsByCompanyNameAndIdNot(supplierRequest.getCompanyName(), supplierRequest.getId())) {
             errorMessages.add("This company name already exists: " + supplierRequest.getCompanyName());
             log.error("Validation failed: Company name already exists. Company name: {}", supplierRequest.getCompanyName());
         }

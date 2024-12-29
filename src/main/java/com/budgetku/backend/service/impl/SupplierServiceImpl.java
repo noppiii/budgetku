@@ -39,6 +39,15 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierResponse;
     }
 
+    @Override
+    public SupplierResponse update(SupplierRequest supplierRequest) throws SupplierNotFoundException, SupplierValidationException {
+        findById(supplierRequest.getId());
+        supplierValidator.validateSupplierUpdate(supplierRequest, supplierRepository);
+        Supplier existingSupplier = supplierMapper.toEntity(supplierRequest);
+        SupplierResponse updatedSupplierResponse = supplierMapper.toDTO(supplierRepository.save(existingSupplier));
+        return updatedSupplierResponse;
+    }
+
     private Supplier findById(UUID id) throws SupplierNotFoundException {
         Optional<Supplier> supplier = supplierRepository.findById(id);
 

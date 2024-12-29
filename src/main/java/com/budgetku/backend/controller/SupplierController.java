@@ -46,4 +46,16 @@ public class SupplierController {
     public ResponseEntity<SupplierResponse> findBySupplierById(@PathVariable UUID id) throws SupplierNotFoundException {
         return ResponseEntity.ok(supplierService.findSupplierById(id));
     }
+
+    @Operation(summary = "Update an existing supplier",
+            description = "Updates the details of an existing supplier.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the supplier"),
+            @ApiResponse(responseCode = "404", description = "Supplier not found"),
+            @ApiResponse(responseCode = "400", description = "Bad request, validation failed")
+    })
+    @PutMapping("/update")
+    public ResponseEntity<SupplierResponse> update(@Valid @RequestBody SupplierRequest supplierRequest) throws SupplierNotFoundException, SupplierValidationException {
+        return ResponseEntity.ok(supplierService.update(supplierRequest));
+    }
 }

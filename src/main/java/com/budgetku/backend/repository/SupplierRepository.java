@@ -16,4 +16,12 @@ public interface SupplierRepository extends JpaRepository<Supplier, UUID> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByCompanyName(String companyName);
+
+    boolean existsByNifAndIdNot(String nif, UUID id);
+
+    boolean existsByEmailAndIdNot(String email, UUID id);
+
+    boolean existsByPhoneNumberAndIdNot(String phoneNumber, UUID id);
+
+    boolean existsByCompanyNameAndIdNot(String phoneNumber, UUID id);
 }

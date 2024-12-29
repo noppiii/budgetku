@@ -12,4 +12,6 @@ public interface SupplierService {
     SupplierResponse create(SupplierRequest supplierRequest) throws SupplierValidationException;
 
     SupplierResponse findSupplierById(UUID id) throws SupplierNotFoundException;
+
+    SupplierResponse update(SupplierRequest supplierRequest) throws SupplierNotFoundException, SupplierValidationException;
 }
