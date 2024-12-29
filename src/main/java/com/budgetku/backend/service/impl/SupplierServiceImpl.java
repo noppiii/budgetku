@@ -5,11 +5,15 @@ import com.budgetku.backend.exception.SupplierValidationException;
 import com.budgetku.backend.mapper.SupplierMapper;
 import com.budgetku.backend.model.Supplier;
 import com.budgetku.backend.payload.request.supplier.SupplierRequest;
+import com.budgetku.backend.payload.response.CustomPageableResponse;
 import com.budgetku.backend.payload.response.supplier.SupplierResponse;
 import com.budgetku.backend.repository.SupplierRepository;
 import com.budgetku.backend.service.SupplierService;
+import com.budgetku.backend.util.PageableUtils;
 import com.budgetku.backend.validator.SupplierValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -56,6 +60,12 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         throw new SupplierNotFoundException(id);
+    }
+
+    @Override
+    public Page<SupplierResponse> findAll(CustomPageableResponse customPageableResponse) throws JsonProcessingException {
+        Page<Supplier> supplierPage = supplierRepository.findAll(PageableUtils.convertToPageable(customPageableResponse));
+        return supplierPage.map(supplierMapper::toDTO);
     }
 
     private Supplier findById(UUID id) throws SupplierNotFoundException {

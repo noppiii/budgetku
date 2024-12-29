@@ -5,12 +5,17 @@ import com.budgetku.backend.exception.SupplierValidationException;
 import com.budgetku.backend.payload.request.supplier.SupplierRequest;
 import com.budgetku.backend.payload.response.supplier.SupplierResponse;
 import com.budgetku.backend.service.SupplierService;
+import com.budgetku.backend.util.PageableUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,5 +74,16 @@ public class SupplierController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) throws SupplierNotFoundException {
         supplierService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get all suppliers",
+            description = "Fetches all suppliers with pagination support.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the list of suppliers"),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
+    })
+    @GetMapping("/all")
+    public ResponseEntity<Page<SupplierResponse>> findAll(@PageableDefault(size = 10, page = 0) Pageable pageable) throws JsonProcessingException {
+        return ResponseEntity.ok(supplierService.findAll(PageableUtils.convertToCustomPageable(pageable)));
     }
 }
