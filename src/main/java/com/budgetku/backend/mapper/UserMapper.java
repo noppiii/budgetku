@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
-public interface UserDTOMapper {
+public interface UserMapper {
 
     @Mapping(target = "password", ignore = true)
     UserCredentialRequest toDTO(User user);

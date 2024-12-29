@@ -4,11 +4,10 @@ import com.budgetku.backend.exception.EmailNotFoundException;
 import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.NifNotFoundException;
 import com.budgetku.backend.exception.UserNotFoundException;
-import com.budgetku.backend.mapper.UserDTOMapper;
+import com.budgetku.backend.mapper.UserMapper;
 import com.budgetku.backend.model.User;
 import com.budgetku.backend.payload.request.user.SignInRequest;
 import com.budgetku.backend.payload.response.user.AuthenticationResponse;
-import com.budgetku.backend.repository.UserRepository;
 import com.budgetku.backend.security.JwtService;
 import com.budgetku.backend.service.AuthenticationService;
 import com.budgetku.backend.service.UserCredentialService;
@@ -27,7 +26,7 @@ import static com.budgetku.backend.model.enumType.UserStatus.LOGGED_OUT;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserDTOMapper userDTOMapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserCredentialService userCredentialService;
     private final JwtService jwtService;
@@ -42,7 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         user.setStatus(LOGGED_IN);
         userCredentialService.save(user);
-        return userDTOMapper.toDTO(jwtService.generateToken(user), jwtService.generateRefreshToken(user), user.getId(), user.getNif(), user.getFirstName());
+        return userMapper.toDTO(jwtService.generateToken(user), jwtService.generateRefreshToken(user), user.getId(), user.getNif(), user.getFirstName());
     }
 
     @Override
@@ -51,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String nif = jwtService.extractNif(refreshToken);
 
         User user = userCredentialService.findByNif(nif).orElseThrow(() -> new NifNotFoundException(nif));
-        return userDTOMapper.toDTOWithoutUserID(jwtService.generateToken(user), refreshToken);
+        return userMapper.toDTOWithoutUserID(jwtService.generateToken(user), refreshToken);
     }
 
     @Override

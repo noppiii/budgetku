@@ -1,5 +1,6 @@
 package com.budgetku.backend.controller;
 
+import com.budgetku.backend.exception.SupplierNotFoundException;
 import com.budgetku.backend.exception.SupplierValidationException;
 import com.budgetku.backend.payload.request.supplier.SupplierRequest;
 import com.budgetku.backend.payload.response.supplier.SupplierResponse;
@@ -11,10 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/supplier")
@@ -34,5 +34,16 @@ public class SupplierController {
     @PostMapping("/create")
     public ResponseEntity<SupplierResponse> create(@Valid @RequestBody SupplierRequest supplierRequest) throws SupplierValidationException {
         return ResponseEntity.ok(supplierService.create(supplierRequest));
+    }
+
+    @Operation(summary = "Get supplier by ID",
+            description = "Fetches a supplier by its ID from the system.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the supplier"),
+            @ApiResponse(responseCode = "404", description = "Supplier not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<SupplierResponse> findBySupplierById(@PathVariable UUID id) throws SupplierNotFoundException {
+        return ResponseEntity.ok(supplierService.findSupplierById(id));
     }
 }

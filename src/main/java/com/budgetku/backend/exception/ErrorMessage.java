@@ -11,7 +11,8 @@ public enum ErrorMessage {
     INVALID_PASSWORD("INVALID_PASSWORD", "This password is not valid", UNAUTHORIZED),
     USER_ID_NOT_FOUND("USER_ID_NOT_FOUND", "User ID not found: %s", NOT_FOUND),
     EMAIL_NOT_FOUND("EMAIL_NOT_FOUND", "Email not found: %s", NOT_FOUND),
-    SUPPLIER_VALIDATION_ERROR("SUPPLIER_VALIDATION_ERROR", "Supplier operation failed due to the following error/s: %s", CONFLICT),;
+    SUPPLIER_VALIDATION_ERROR("SUPPLIER_VALIDATION_ERROR", "Supplier operation failed due to the following error/s: %s", CONFLICT),
+    SUPPLIER_NOT_FOUND("SUPPLIER_NOT_FOUND", "Supplier not found with ID: %s", NOT_FOUND),;
 
     private final String errorCode;
     private final String message;

@@ -1,11 +1,9 @@
 package com.budgetku.backend.service.impl;
 
-import com.budgetku.backend.exception.EmailNotFoundException;
 import com.budgetku.backend.exception.InvalidPasswordException;
 import com.budgetku.backend.exception.UserCredentialValidationException;
 import com.budgetku.backend.exception.UserNotFoundException;
-import com.budgetku.backend.mapper.UserDTOMapper;
-import com.budgetku.backend.model.PasswordResetToken;
+import com.budgetku.backend.mapper.UserMapper;
 import com.budgetku.backend.model.User;
 import com.budgetku.backend.model.enumType.UserStatus;
 import com.budgetku.backend.payload.request.user.UserCredentialRequest;
@@ -20,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,7 +27,7 @@ public class UserCredentialServiceImpl implements UserCredentialService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserDTOMapper userDTOMapper;
+    private final UserMapper userMapper;
     private final JwtService jwtService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
@@ -42,9 +39,9 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     @Override
     public AuthenticationResponse register(UserCredentialRequest userCredentialRequest) throws UserCredentialValidationException {
         UserCredentialValidator.validateUserCredentialsCreation(userCredentialRequest, userRepository);
-        User newUser = userDTOMapper.toEntity(userCredentialRequest, passwordEncoder);
+        User newUser = userMapper.toEntity(userCredentialRequest, passwordEncoder);
         userRepository.save(newUser);
-        return userDTOMapper.toDTO(jwtService.generateToken(newUser), jwtService.generateRefreshToken(newUser), newUser.getId());
+        return userMapper.toDTO(jwtService.generateToken(newUser), jwtService.generateRefreshToken(newUser), newUser.getId());
     }
 
     @Override
@@ -59,11 +56,11 @@ public class UserCredentialServiceImpl implements UserCredentialService {
         UserCredentialValidator.validateUserCredentialUpdate(userCredentialRequest, userRepository);
 
         if (userCredentialRequest.getNewPassword() != null) {
-            userDTOMapper.updateFromDTO(userCredentialRequest, existingUser, passwordEncoder);
+            userMapper.updateFromDTO(userCredentialRequest, existingUser, passwordEncoder);
         } else {
-            userDTOMapper.updateFromDTO(userCredentialRequest, existingUser);
+            userMapper.updateFromDTO(userCredentialRequest, existingUser);
         }
-        return userDTOMapper.toDTO(userRepository.save(existingUser));
+        return userMapper.toDTO(userRepository.save(existingUser));
     }
 
     @Override
@@ -85,7 +82,7 @@ public class UserCredentialServiceImpl implements UserCredentialService {
 
     @Override
     public UserCredentialRequest findById(UUID id) throws UserNotFoundException {
-        return userDTOMapper.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
+        return userMapper.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     @Override
