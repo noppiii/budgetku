@@ -48,6 +48,16 @@ public class SupplierServiceImpl implements SupplierService {
         return updatedSupplierResponse;
     }
 
+    @Override
+    public void delete(UUID id) throws SupplierNotFoundException {
+        if (supplierRepository.existsById(id)) {
+            supplierRepository.delete(findById(id));
+            return;
+        }
+
+        throw new SupplierNotFoundException(id);
+    }
+
     private Supplier findById(UUID id) throws SupplierNotFoundException {
         Optional<Supplier> supplier = supplierRepository.findById(id);
 

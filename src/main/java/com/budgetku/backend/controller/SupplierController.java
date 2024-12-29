@@ -58,4 +58,16 @@ public class SupplierController {
     public ResponseEntity<SupplierResponse> update(@Valid @RequestBody SupplierRequest supplierRequest) throws SupplierNotFoundException, SupplierValidationException {
         return ResponseEntity.ok(supplierService.update(supplierRequest));
     }
+
+    @Operation(summary = "Delete a supplier",
+            description = "Deletes a supplier by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted the supplier"),
+            @ApiResponse(responseCode = "404", description = "Supplier not found")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) throws SupplierNotFoundException {
+        supplierService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

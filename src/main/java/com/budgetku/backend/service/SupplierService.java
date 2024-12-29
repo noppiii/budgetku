@@ -14,4 +14,6 @@ public interface SupplierService {
     SupplierResponse findSupplierById(UUID id) throws SupplierNotFoundException;
 
     SupplierResponse update(SupplierRequest supplierRequest) throws SupplierNotFoundException, SupplierValidationException;
+
+    void delete(UUID id) throws SupplierNotFoundException;
 }
