@@ -18,6 +18,11 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 management:
   endpoints:
@@ -41,4 +46,4 @@ app:
 #  bootstrap-servers: localhost:9092
 
 server:
-  port: 8081
+  port: 8080

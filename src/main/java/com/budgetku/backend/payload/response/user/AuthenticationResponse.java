@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Data Transfer Object representing the authentication response, including the JWT token, refresh token and user ID.")
+@Schema(description = "Response representing the authentication response, including the JWT token, refresh token and user ID.")
 public class AuthenticationResponse {
 
     @Schema(description = "JWT token used for authenticating API requests", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")

@@ -10,7 +10,8 @@ public enum ErrorMessage {
     NIF_NOT_FOUND("NIF_NOT_FOUND", "NIF not found: %s", NOT_FOUND),
     INVALID_PASSWORD("INVALID_PASSWORD", "This password is not valid", UNAUTHORIZED),
     USER_ID_NOT_FOUND("USER_ID_NOT_FOUND", "User ID not found: %s", NOT_FOUND),
-    EMAIL_NOT_FOUND("EMAIL_NOT_FOUND", "Email not found: %s", NOT_FOUND),;
+    EMAIL_NOT_FOUND("EMAIL_NOT_FOUND", "Email not found: %s", NOT_FOUND),
+    SUPPLIER_VALIDATION_ERROR("SUPPLIER_VALIDATION_ERROR", "Supplier operation failed due to the following error/s: %s", CONFLICT),;
 
     private final String errorCode;
     private final String message;
