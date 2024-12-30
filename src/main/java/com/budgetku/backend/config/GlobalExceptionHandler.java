@@ -65,4 +65,10 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), ex.getStatus().value(), ex.getErrorCode());
         return new ResponseEntity<>(errorResponse, ex.getStatus());
     }
+
+    @ExceptionHandler(BudgetTypeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBudgetTypeNotFoundException(BudgetTypeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), ex.getStatus().value(), ex.getErrorCode());
+        return new ResponseEntity<>(errorResponse, ex.getStatus());
+    }
 }

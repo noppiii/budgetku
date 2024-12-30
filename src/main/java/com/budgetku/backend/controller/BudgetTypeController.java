@@ -1,6 +1,7 @@
 package com.budgetku.backend.controller;
 
 import com.budgetku.backend.exception.BudgetTypeAlreadyExistsException;
+import com.budgetku.backend.exception.BudgetTypeNotFoundException;
 import com.budgetku.backend.payload.request.budget.BudgetTypeRequest;
 import com.budgetku.backend.payload.response.budget.BudgetTypeResponse;
 import com.budgetku.backend.service.BudgetTypeService;
@@ -11,10 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/budget/type")
@@ -36,5 +36,19 @@ public class BudgetTypeController {
     @PostMapping("/create")
     public ResponseEntity<BudgetTypeResponse> createBudgetType(@Valid @RequestBody BudgetTypeRequest budgetTypeRequest) throws BudgetTypeAlreadyExistsException {
         return ResponseEntity.ok(budgetTypeService.createBudgetType(budgetTypeRequest));
+    }
+
+    @Operation(
+            summary = "Delete a Budget Type",
+            description = "Deletes a Budget Type by its unique ID. Throws a 404 error if the Budget Type is not found."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted the Budget Type"),
+            @ApiResponse(responseCode = "404", description = "Budget Type not found")
+    })
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteBudgetType(@PathVariable UUID id) throws BudgetTypeNotFoundException {
+        budgetTypeService.deleteBudgetType(id);
+        return ResponseEntity.noContent().build();
     }
 }
