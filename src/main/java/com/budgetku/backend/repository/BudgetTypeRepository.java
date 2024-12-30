@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface BudgetTypeRepository extends JpaRepository<BudgetType, UUID> {
 
     Optional<BudgetType> findByName(String name);
+
+    Optional<BudgetType> findByNameAndIdNot(String name, UUID id);
 }

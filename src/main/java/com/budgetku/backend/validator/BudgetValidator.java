@@ -15,4 +15,10 @@ public class BudgetValidator {
             throw new BudgetTypeAlreadyExistsException(budgetTypeRequest.getName());
         }
     }
+
+    public void checkForExistingBudgetTypeUpdate(BudgetTypeRequest budgetTypeDTO, BudgetTypeRepository budgetTypeRepository) throws BudgetTypeAlreadyExistsException {
+        if (budgetTypeRepository.findByNameAndIdNot(budgetTypeDTO.getName(), budgetTypeDTO.getId()).isPresent()) {
+            throw new BudgetTypeAlreadyExistsException(budgetTypeDTO.getName());
+        }
+    }
 }

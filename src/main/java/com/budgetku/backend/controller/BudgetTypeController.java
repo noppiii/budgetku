@@ -1,5 +1,6 @@
 package com.budgetku.backend.controller;
 
+import com.budgetku.backend.exception.BudgetSubtypeNotFoundException;
 import com.budgetku.backend.exception.BudgetTypeAlreadyExistsException;
 import com.budgetku.backend.exception.BudgetTypeNotFoundException;
 import com.budgetku.backend.payload.request.budget.BudgetTypeRequest;
@@ -50,5 +51,20 @@ public class BudgetTypeController {
     public ResponseEntity<Void> deleteBudgetType(@PathVariable UUID id) throws BudgetTypeNotFoundException {
         budgetTypeService.deleteBudgetType(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Update an existing Budget Type",
+            description = "Updates an existing Budget Type. If the Budget Type does not exist or a conflict occurs, the operation will throw appropriate errors."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the Budget Type"),
+            @ApiResponse(responseCode = "404", description = "Budget Type not found"),
+            @ApiResponse(responseCode = "409", description = "Budget Type already exists"),
+            @ApiResponse(responseCode = "400", description = "Invalid Budget Type data")
+    })
+    @PutMapping("/update")
+    public ResponseEntity<BudgetTypeResponse> updateBudgetType(@Valid @RequestBody BudgetTypeRequest budgetTypeRequest) throws BudgetTypeNotFoundException, BudgetTypeAlreadyExistsException, BudgetSubtypeNotFoundException {
+        return ResponseEntity.ok(budgetTypeService.updateBudgetType(budgetTypeRequest));
     }
 }
