@@ -15,4 +15,6 @@ public interface BudgetTypeService {
     void deleteBudgetType(UUID id) throws BudgetTypeNotFoundException;
 
     BudgetTypeResponse updateBudgetType(BudgetTypeRequest budgetTypeRequest) throws BudgetTypeNotFoundException, BudgetTypeAlreadyExistsException, BudgetSubtypeNotFoundException;
+
+    BudgetTypeResponse findBudgetTypeDTOById(UUID id) throws BudgetTypeNotFoundException, BudgetSubtypeNotFoundException;
 }

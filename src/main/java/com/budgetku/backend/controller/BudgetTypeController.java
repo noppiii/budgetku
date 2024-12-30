@@ -67,4 +67,17 @@ public class BudgetTypeController {
     public ResponseEntity<BudgetTypeResponse> updateBudgetType(@Valid @RequestBody BudgetTypeRequest budgetTypeRequest) throws BudgetTypeNotFoundException, BudgetTypeAlreadyExistsException, BudgetSubtypeNotFoundException {
         return ResponseEntity.ok(budgetTypeService.updateBudgetType(budgetTypeRequest));
     }
+
+    @Operation(
+            summary = "Get a Budget Type by ID",
+            description = "Fetches a specific Budget Type by its unique ID. Returns a 404 if the Budget Type is not found."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the Budget Type"),
+            @ApiResponse(responseCode = "404", description = "Budget Type not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<BudgetTypeResponse> findBudgetTypeById(@PathVariable UUID id) throws BudgetTypeNotFoundException, BudgetSubtypeNotFoundException {
+        return ResponseEntity.ok(budgetTypeService.findBudgetTypeDTOById(id));
+    }
 }
