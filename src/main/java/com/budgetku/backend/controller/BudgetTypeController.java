@@ -6,12 +6,17 @@ import com.budgetku.backend.exception.BudgetTypeNotFoundException;
 import com.budgetku.backend.payload.request.budget.BudgetTypeRequest;
 import com.budgetku.backend.payload.response.budget.BudgetTypeResponse;
 import com.budgetku.backend.service.BudgetTypeService;
+import com.budgetku.backend.util.PageableUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,5 +84,19 @@ public class BudgetTypeController {
     @GetMapping("/{id}")
     public ResponseEntity<BudgetTypeResponse> findBudgetTypeById(@PathVariable UUID id) throws BudgetTypeNotFoundException, BudgetSubtypeNotFoundException {
         return ResponseEntity.ok(budgetTypeService.findBudgetTypeDTOById(id));
+    }
+
+    @Operation(
+            summary = "Get all Budget Types",
+            description = "Retrieves all Budget Types, supporting pagination. Returns a paginated list of Budget Types."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the list of Budget Types"),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/all")
+    public ResponseEntity<Page<BudgetTypeResponse>> findAllBudgetTypes(@PageableDefault(size = 10, page = 0) Pageable pageable) throws JsonProcessingException {
+        return ResponseEntity.ok(budgetTypeService.findAllBudgetTypes(PageableUtils.convertToCustomPageable(pageable)));
     }
 }
