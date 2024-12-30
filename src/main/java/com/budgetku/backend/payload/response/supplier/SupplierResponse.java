@@ -1,6 +1,6 @@
 package com.budgetku.backend.payload.response.supplier;
 
-import com.budgetku.backend.payload.request.AbstractRequest;
+import com.budgetku.backend.payload.response.AbstractResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Response representing a supplier, containing details about the company, responsible person, and contact information.")
-public class SupplierResponse extends AbstractRequest {
+public class SupplierResponse extends AbstractResponse {
 
     @Schema(description = "The name of the supplier company.", example = "Tech Solutions Ltd.", required = true)
     private String companyName;
