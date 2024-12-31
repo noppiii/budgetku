@@ -63,4 +63,15 @@ public class BudgetSubtypeController {
         budgetSubtypeService.deleteBudgetSubtype(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Get a budget subtype by ID",
+            description = "Fetches a budget subtype by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the budget subtype"),
+            @ApiResponse(responseCode = "404", description = "Budget subtype not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<BudgetSubtypeResponse> findSubtypeById(@PathVariable UUID id) throws BudgetSubtypeNotFoundException {
+        return ResponseEntity.ok(budgetSubtypeService.findBudgetSubtypeById(id));
+    }
 }
