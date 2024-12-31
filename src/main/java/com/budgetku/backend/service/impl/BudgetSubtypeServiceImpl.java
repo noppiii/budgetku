@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class BudgetSubtypeServiceImpl implements BudgetSubtypeService {
@@ -40,5 +43,26 @@ public class BudgetSubtypeServiceImpl implements BudgetSubtypeService {
         BudgetSubtypeResponse savedBudgetSubtypeResponse = budgetMapper.toDTO(budgetSubtype);
         savedBudgetSubtypeResponse.setCorrelationId(budgetSubtypeRequest.getCorrelationId());
         return savedBudgetSubtypeResponse;
+    }
+
+    @Override
+    public BudgetSubtypeResponse updateBudgetSubtype(BudgetSubtypeRequest budgetSubtypeRequest) throws BudgetSubtypeNotFoundException, BudgetSubtypeAlreadyExistsException, BudgetExceededException {
+        BudgetSubtype existingBudgetSubtype = findById(budgetSubtypeRequest.getId());
+        budgetUtils.checkBudgetExceeded(existingBudgetSubtype.getBudgetType(), budgetSubtypeRequest, budgetSubtypeRepository, existingBudgetSubtype);
+        budgetValidator.checkForExistingBudgetSubtypeUpdate(budgetSubtypeRequest, budgetSubtypeRepository);
+        BudgetSubtype budgetSubtype = budgetMapper.toEntity(budgetSubtypeRequest);
+        BudgetSubtypeResponse savedBudgetSubtypeResponse = budgetMapper.toDTO(budgetSubtypeRepository.save(budgetSubtype));
+        return savedBudgetSubtypeResponse;
+    }
+
+    @Transactional
+    public BudgetSubtype findById(UUID id) throws BudgetSubtypeNotFoundException {
+        Optional<BudgetSubtype> budgetSubtype = budgetSubtypeRepository.findById(id);
+
+        if (budgetSubtype.isPresent()) {
+            return budgetSubtype.get();
+        }
+
+        throw new BudgetSubtypeNotFoundException(id);
     }
 }

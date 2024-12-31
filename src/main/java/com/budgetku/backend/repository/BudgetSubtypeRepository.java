@@ -15,4 +15,6 @@ public interface BudgetSubtypeRepository extends JpaRepository<BudgetSubtype, UU
     Optional<BudgetSubtype> findByName(String name);
 
     List<BudgetSubtype> findByBudgetType(BudgetType budgetType);
+
+    Optional<BudgetSubtype> findByNameAndIdNot(String name, UUID id);
 }

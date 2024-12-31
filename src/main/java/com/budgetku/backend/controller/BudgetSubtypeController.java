@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/budget/subtype")
@@ -38,5 +35,18 @@ public class BudgetSubtypeController {
     @PostMapping("/create")
     public ResponseEntity<BudgetSubtypeResponse> addSubtype(@Valid @RequestBody BudgetSubtypeRequest budgetSubtypeRequest) throws BudgetTypeNotFoundException, BudgetSubtypeAlreadyExistsException, BudgetSubtypeNotFoundException, BudgetExceededException {
         return ResponseEntity.ok(budgetSubtypeService.addSubtypeToBudget(budgetSubtypeRequest));
+    }
+
+    @Operation(summary = "Update an existing budget subtype",
+            description = "Updates the details of an existing budget subtype.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the budget subtype"),
+            @ApiResponse(responseCode = "404", description = "Budget subtype not found"),
+            @ApiResponse(responseCode = "409", description = "Budget subtype already exists"),
+            @ApiResponse(responseCode = "400", description = "Budget exceeded")
+    })
+    @PutMapping("/update")
+    public ResponseEntity<BudgetSubtypeResponse> updateSubtype(@Valid @RequestBody BudgetSubtypeRequest budgetSubtypeRequest) throws BudgetSubtypeNotFoundException, BudgetSubtypeAlreadyExistsException, BudgetExceededException {
+        return ResponseEntity.ok(budgetSubtypeService.updateBudgetSubtype(budgetSubtypeRequest));
     }
 }

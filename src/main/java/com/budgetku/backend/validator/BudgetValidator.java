@@ -30,4 +30,10 @@ public class BudgetValidator {
             throw new BudgetSubtypeAlreadyExistsException(budgetSubtypeRequest.getName());
         }
     }
+
+    public void checkForExistingBudgetSubtypeUpdate(BudgetSubtypeRequest budgetSubtypeRequest, BudgetSubtypeRepository budgetSubtypeRepository) throws BudgetSubtypeAlreadyExistsException {
+        if (budgetSubtypeRepository.findByNameAndIdNot(budgetSubtypeRequest.getName(), budgetSubtypeRequest.getId()).isPresent()) {
+            throw new BudgetSubtypeAlreadyExistsException(budgetSubtypeRequest.getName());
+        }
+    }
 }
