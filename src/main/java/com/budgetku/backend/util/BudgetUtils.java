@@ -5,6 +5,7 @@ import com.budgetku.backend.model.BudgetSubtype;
 import com.budgetku.backend.model.BudgetType;
 import com.budgetku.backend.payload.request.budget.BudgetSubtypeRequest;
 import com.budgetku.backend.repository.BudgetSubtypeRepository;
+import com.budgetku.backend.service.BudgetTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,12 @@ public class BudgetUtils {
         if (totalSpentForType + budgetSubtypeRequest.getAvailableFunds() > budgetType.getAvailableFunds()) {
             throw new BudgetExceededException(budgetSubtypeRequest.getAvailableFunds(), totalSpentForType);
         }
+    }
+
+    public void handleDeleteBudgetSubtypeAvailableFunds(BudgetSubtype budgetSubtype, BudgetTypeService budgetTypeService, BudgetSubtypeRepository budgetSubtypeRepository) {
+        BudgetType budgetType = budgetSubtype.getBudgetType();
+        budgetType.setAvailableFunds(budgetType.getAvailableFunds() - budgetSubtype.getAvailableFunds());
+        budgetTypeService.save(budgetType);
+        budgetSubtypeRepository.deleteById(budgetSubtype.getId());
     }
 }

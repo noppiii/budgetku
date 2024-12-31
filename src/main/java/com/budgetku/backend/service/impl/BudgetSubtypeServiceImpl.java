@@ -55,6 +55,18 @@ public class BudgetSubtypeServiceImpl implements BudgetSubtypeService {
         return savedBudgetSubtypeResponse;
     }
 
+    @Override
+    public void deleteBudgetSubtype(UUID subtypeId) throws BudgetSubtypeNotFoundException {
+        Optional<BudgetSubtype> budgetSubtype = budgetSubtypeRepository.findById(subtypeId);
+
+        if (budgetSubtype.isPresent()) {
+            budgetUtils.handleDeleteBudgetSubtypeAvailableFunds(budgetSubtype.get(), budgetTypeService, budgetSubtypeRepository);
+            return;
+        }
+
+        throw new BudgetSubtypeNotFoundException(subtypeId);
+    }
+
     @Transactional
     public BudgetSubtype findById(UUID id) throws BudgetSubtypeNotFoundException {
         Optional<BudgetSubtype> budgetSubtype = budgetSubtypeRepository.findById(id);

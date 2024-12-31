@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/budget/subtype")
 @RequiredArgsConstructor
@@ -48,5 +50,17 @@ public class BudgetSubtypeController {
     @PutMapping("/update")
     public ResponseEntity<BudgetSubtypeResponse> updateSubtype(@Valid @RequestBody BudgetSubtypeRequest budgetSubtypeRequest) throws BudgetSubtypeNotFoundException, BudgetSubtypeAlreadyExistsException, BudgetExceededException {
         return ResponseEntity.ok(budgetSubtypeService.updateBudgetSubtype(budgetSubtypeRequest));
+    }
+
+    @Operation(summary = "Delete a budget subtype",
+            description = "Deletes a budget subtype by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted the budget subtype"),
+            @ApiResponse(responseCode = "404", description = "Budget subtype not found")
+    })
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteSubtype(@PathVariable UUID id) throws BudgetSubtypeNotFoundException {
+        budgetSubtypeService.deleteBudgetSubtype(id);
+        return ResponseEntity.noContent().build();
     }
 }

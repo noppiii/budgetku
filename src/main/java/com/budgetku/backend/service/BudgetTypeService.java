@@ -25,4 +25,6 @@ public interface BudgetTypeService {
     Page<BudgetTypeResponse> findAllBudgetTypes(CustomPageableResponse customPageableResponse) throws JsonProcessingException;
 
     BudgetType findBudgetTypeEntityById(UUID id) throws BudgetSubtypeNotFoundException, BudgetTypeNotFoundException;
+
+    void save(BudgetType budgetType);
 }

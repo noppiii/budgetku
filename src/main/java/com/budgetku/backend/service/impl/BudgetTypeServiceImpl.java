@@ -74,6 +74,11 @@ public class BudgetTypeServiceImpl implements BudgetTypeService {
         return findById(id);
     }
 
+    @Override
+    public void save(BudgetType budgetType) {
+        budgetTypeRepository.save(budgetType);
+    }
+
     @Transactional
     public BudgetType findById(UUID id) throws BudgetTypeNotFoundException {
         Optional<BudgetType> budgetType = budgetTypeRepository.findById(id);
