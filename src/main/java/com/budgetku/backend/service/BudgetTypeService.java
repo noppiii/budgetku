@@ -3,6 +3,7 @@ package com.budgetku.backend.service;
 import com.budgetku.backend.exception.BudgetSubtypeNotFoundException;
 import com.budgetku.backend.exception.BudgetTypeAlreadyExistsException;
 import com.budgetku.backend.exception.BudgetTypeNotFoundException;
+import com.budgetku.backend.model.BudgetType;
 import com.budgetku.backend.payload.request.budget.BudgetTypeRequest;
 import com.budgetku.backend.payload.response.CustomPageableResponse;
 import com.budgetku.backend.payload.response.budget.BudgetTypeResponse;
@@ -22,4 +23,6 @@ public interface BudgetTypeService {
     BudgetTypeResponse findBudgetTypeDTOById(UUID id) throws BudgetTypeNotFoundException, BudgetSubtypeNotFoundException;
 
     Page<BudgetTypeResponse> findAllBudgetTypes(CustomPageableResponse customPageableResponse) throws JsonProcessingException;
+
+    BudgetType findBudgetTypeEntityById(UUID id) throws BudgetSubtypeNotFoundException, BudgetTypeNotFoundException;
 }

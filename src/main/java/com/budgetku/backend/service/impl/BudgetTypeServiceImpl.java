@@ -69,6 +69,11 @@ public class BudgetTypeServiceImpl implements BudgetTypeService {
         return budgetTypePage.map(budgetMapper::toDTO);
     }
 
+    @Override
+    public BudgetType findBudgetTypeEntityById(UUID id) throws BudgetSubtypeNotFoundException, BudgetTypeNotFoundException {
+        return findById(id);
+    }
+
     @Transactional
     public BudgetType findById(UUID id) throws BudgetTypeNotFoundException {
         Optional<BudgetType> budgetType = budgetTypeRepository.findById(id);

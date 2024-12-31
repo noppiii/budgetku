@@ -1,7 +1,6 @@
 package com.budgetku.backend.payload.request.budget;
 
 import com.budgetku.backend.payload.request.AbstractRequest;
-import com.budgetku.backend.payload.response.budget.BudgetSubtypeResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -32,5 +31,5 @@ public class BudgetTypeRequest extends AbstractRequest {
 
     @Schema(description = "List of associated budget subtypes for this budget type.", nullable = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<BudgetSubtypeResponse> subtypes;
+    private List<BudgetSubtypeRequest> subtypes;
 }

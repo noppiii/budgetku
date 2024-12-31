@@ -2,6 +2,7 @@ package com.budgetku.backend.mapper;
 
 import com.budgetku.backend.model.BudgetSubtype;
 import com.budgetku.backend.model.BudgetType;
+import com.budgetku.backend.payload.request.budget.BudgetSubtypeRequest;
 import com.budgetku.backend.payload.request.budget.BudgetTypeRequest;
 import com.budgetku.backend.payload.response.budget.BudgetSubtypeResponse;
 import com.budgetku.backend.payload.response.budget.BudgetTypeResponse;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface BudgetMapper {
+
+    BudgetSubtype toEntity(BudgetSubtypeRequest budgetSubtypeRequest);
 
     BudgetType toEntity(BudgetTypeRequest budgetTypeRequest);
 
