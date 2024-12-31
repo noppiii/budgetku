@@ -7,12 +7,17 @@ import com.budgetku.backend.exception.BudgetTypeNotFoundException;
 import com.budgetku.backend.payload.request.budget.BudgetSubtypeRequest;
 import com.budgetku.backend.payload.response.budget.BudgetSubtypeResponse;
 import com.budgetku.backend.service.BudgetSubtypeService;
+import com.budgetku.backend.util.PageableUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,5 +78,17 @@ public class BudgetSubtypeController {
     @GetMapping("/{id}")
     public ResponseEntity<BudgetSubtypeResponse> findSubtypeById(@PathVariable UUID id) throws BudgetSubtypeNotFoundException {
         return ResponseEntity.ok(budgetSubtypeService.findBudgetSubtypeById(id));
+    }
+
+    @Operation(summary = "Get all budget subtypes",
+            description = "Fetches all budget subtypes, paginated.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched the list of budget subtypes"),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/all")
+    public ResponseEntity<Page<BudgetSubtypeResponse>> findAllSubtypes(@PageableDefault(size = 10, page = 0) Pageable pageable) throws JsonProcessingException {
+        return ResponseEntity.ok(budgetSubtypeService.findAllBudgetSubtypes(PageableUtils.convertToCustomPageable(pageable)));
     }
 }

@@ -8,13 +8,17 @@ import com.budgetku.backend.mapper.BudgetMapper;
 import com.budgetku.backend.model.BudgetSubtype;
 import com.budgetku.backend.model.BudgetType;
 import com.budgetku.backend.payload.request.budget.BudgetSubtypeRequest;
+import com.budgetku.backend.payload.response.CustomPageableResponse;
 import com.budgetku.backend.payload.response.budget.BudgetSubtypeResponse;
 import com.budgetku.backend.repository.BudgetSubtypeRepository;
 import com.budgetku.backend.service.BudgetSubtypeService;
 import com.budgetku.backend.service.BudgetTypeService;
 import com.budgetku.backend.util.BudgetUtils;
+import com.budgetku.backend.util.PageableUtils;
 import com.budgetku.backend.validator.BudgetValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +76,12 @@ public class BudgetSubtypeServiceImpl implements BudgetSubtypeService {
     public BudgetSubtypeResponse findBudgetSubtypeById(UUID subtypeId) throws BudgetSubtypeNotFoundException {
         BudgetSubtypeResponse budgetSubtype = budgetMapper.toDTO(findById(subtypeId));
         return budgetSubtype;
+    }
+
+    @Override
+    public Page<BudgetSubtypeResponse> findAllBudgetSubtypes(CustomPageableResponse customPageableResponse) throws JsonProcessingException {
+        Page<BudgetSubtype> budgetSubtypePage = budgetSubtypeRepository.findAll(PageableUtils.convertToPageable(customPageableResponse));
+        return budgetSubtypePage.map(budgetMapper::toDTO);
     }
 
     @Transactional
