@@ -2,6 +2,7 @@ package com.budgetku.backend.service;
 
 import com.budgetku.backend.exception.SupplierNotFoundException;
 import com.budgetku.backend.exception.SupplierValidationException;
+import com.budgetku.backend.model.Supplier;
 import com.budgetku.backend.payload.request.supplier.SupplierRequest;
 import com.budgetku.backend.payload.response.CustomPageableResponse;
 import com.budgetku.backend.payload.response.supplier.SupplierResponse;
@@ -21,4 +22,8 @@ public interface SupplierService {
     void delete(UUID id) throws SupplierNotFoundException;
 
     Page<SupplierResponse> findAll(CustomPageableResponse customPageableResponse) throws JsonProcessingException;
+
+    boolean existsById(UUID supplierId);
+
+    Supplier findSupplierEntityById(UUID id) throws SupplierNotFoundException;
 }

@@ -4,6 +4,7 @@ import com.budgetku.backend.exception.BudgetExceededException;
 import com.budgetku.backend.exception.BudgetSubtypeAlreadyExistsException;
 import com.budgetku.backend.exception.BudgetSubtypeNotFoundException;
 import com.budgetku.backend.exception.BudgetTypeNotFoundException;
+import com.budgetku.backend.model.BudgetSubtype;
 import com.budgetku.backend.payload.request.budget.BudgetSubtypeRequest;
 import com.budgetku.backend.payload.response.CustomPageableResponse;
 import com.budgetku.backend.payload.response.budget.BudgetSubtypeResponse;
@@ -23,4 +24,9 @@ public interface BudgetSubtypeService {
     BudgetSubtypeResponse findBudgetSubtypeById(UUID subtypeId) throws BudgetSubtypeNotFoundException;
 
     Page<BudgetSubtypeResponse> findAllBudgetSubtypes(CustomPageableResponse customPageableResponse) throws JsonProcessingException;
+
+    BudgetSubtype findBudgetSubtypeEntityById(UUID subtypeId) throws BudgetSubtypeNotFoundException;
+
+    void save(BudgetSubtype subtype);
+
 }

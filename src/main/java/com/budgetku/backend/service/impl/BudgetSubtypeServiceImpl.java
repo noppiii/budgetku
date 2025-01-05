@@ -84,6 +84,16 @@ public class BudgetSubtypeServiceImpl implements BudgetSubtypeService {
         return budgetSubtypePage.map(budgetMapper::toDTO);
     }
 
+    @Override
+    public BudgetSubtype findBudgetSubtypeEntityById(UUID subtypeId) throws BudgetSubtypeNotFoundException {
+        return findById(subtypeId);
+    }
+
+    @Override
+    public void save(BudgetSubtype subtype) {
+        budgetSubtypeRepository.save(subtype);
+    }
+
     @Transactional
     public BudgetSubtype findById(UUID id) throws BudgetSubtypeNotFoundException {
         Optional<BudgetSubtype> budgetSubtype = budgetSubtypeRepository.findById(id);

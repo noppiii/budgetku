@@ -17,7 +17,10 @@ public enum ErrorMessage {
     BUDGET_TYPE_NOT_FOUND("BUDGET_TYPE_NOT_FOUND", "Budget type not found with ID: %s", NOT_FOUND),
     BUDGET_SUBTYPE_NOT_FOUND("BUDGET_SUBTYPE_NOT_FOUND", "Budget subtype not found with ID: %s", NOT_FOUND),
     BUDGET_SUBTYPE_ALREADY_EXISTS("BUDGET_SUBTYPE_ALREADY_EXISTS", "A budget subtype with the name '%s' already exists", CONFLICT),
-    BUDGET_EXCEEDED("BUDGET_EXCEEDED", "Total value exceeds the available budget. Total value: %s, Available: %s", BAD_REQUEST);;
+    BUDGET_EXCEEDED("BUDGET_EXCEEDED", "Total value exceeds the available budget. Total value: %s, Available: %s", BAD_REQUEST),
+    MOVEMENT_ALREADY_EXISTS("MOVEMENT_ALREADY_EXISTS", "A movement with the document number '%s' already exists", CONFLICT),
+    MOVEMENT_VALIDATION_ERROR("MOVEMENT_VALIDATION_ERROR", "Movement operation failed due to the following error/s: %s", CONFLICT),
+    INVOICE_NOT_FOUND("INVOICE_NOT_FOUND", "Invoice not found with ID: %s", NOT_FOUND);
 
     private final String errorCode;
     private final String message;

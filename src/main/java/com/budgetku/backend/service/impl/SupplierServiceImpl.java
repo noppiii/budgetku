@@ -68,6 +68,16 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierPage.map(supplierMapper::toDTO);
     }
 
+    @Override
+    public boolean existsById(UUID supplierId) {
+        return supplierRepository.existsById(supplierId);
+    }
+
+    @Override
+    public Supplier findSupplierEntityById(UUID id) throws SupplierNotFoundException {
+        return findById(id);
+    }
+
     private Supplier findById(UUID id) throws SupplierNotFoundException {
         Optional<Supplier> supplier = supplierRepository.findById(id);
 
