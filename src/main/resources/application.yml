@@ -47,3 +47,7 @@ app:
 
 server:
   port: 8080
+
+local:
+  storage:
+    path: src/main/resources/static/store/
