@@ -29,7 +29,7 @@ public class MovementUtil {
     }
 
     public void setBudget(Movement movement, MovementRequest movementRequest, BudgetSubtypeService budgetSubtypeService, BudgetTypeService budgetTypeService) throws BudgetSubtypeNotFoundException, BudgetTypeNotFoundException {
-        if ( movementRequest.getBudgetSubtypeId() != null) {
+        if (movementRequest.getBudgetSubtypeId() != null) {
             BudgetSubtype budgetSubtype = budgetSubtypeService.findBudgetSubtypeEntityById(movementRequest.getBudgetSubtypeId());
             movement.setBudgetSubtype(budgetSubtype);
             movement.setBudgetType(null);
@@ -41,30 +41,82 @@ public class MovementUtil {
     }
 
     public void updateSpentAmounts(MovementRequest movementRequest, BudgetSubtypeService budgetSubtypeService, BudgetTypeService budgetTypeService, Movement movement, Double totalValue) throws BudgetExceededException {
-         if (movementRequest.getBudgetSubtype() != null) {
-             BudgetSubtype budgetSubtype = movement.getBudgetSubtype();
-             BudgetType type = budgetSubtype.getBudgetType();
+        if (movementRequest.getBudgetSubtype() != null) {
+            BudgetSubtype budgetSubtype = movement.getBudgetSubtype();
+            BudgetType type = budgetSubtype.getBudgetType();
 
-             if (totalValue > budgetSubtype.getAvailableFunds()) {
-                 throw new BudgetExceededException(totalValue, budgetSubtype.getAvailableFunds());
-             }
+            if (totalValue > budgetSubtype.getAvailableFunds()) {
+                throw new BudgetExceededException(totalValue, budgetSubtype.getAvailableFunds());
+            }
 
-             budgetSubtype.setAvailableFunds(budgetSubtype.getAvailableFunds() - totalValue);
-             budgetSubtypeService.save(budgetSubtype);
+            budgetSubtype.setAvailableFunds(budgetSubtype.getAvailableFunds() - totalValue);
+            budgetSubtypeService.save(budgetSubtype);
 
-             if (type != null) {
-                 type.setAvailableFunds(type.getAvailableFunds() - totalValue);
-                 budgetTypeService.save(type);
-             }
-         } else if (movement.getBudgetType() != null) {
-             BudgetType type = movement.getBudgetType();
+            if (type != null) {
+                type.setAvailableFunds(type.getAvailableFunds() - totalValue);
+                budgetTypeService.save(type);
+            }
+        } else if (movement.getBudgetType() != null) {
+            BudgetType type = movement.getBudgetType();
 
-             if (totalValue > type.getAvailableFunds()) {
-                 throw new BudgetExceededException(totalValue, type.getAvailableFunds());
-             }
+            if (totalValue > type.getAvailableFunds()) {
+                throw new BudgetExceededException(totalValue, type.getAvailableFunds());
+            }
 
-             type.setAvailableFunds(type.getAvailableFunds() - totalValue);
-             budgetTypeService.save(type);
-         }
+            type.setAvailableFunds(type.getAvailableFunds() - totalValue);
+            budgetTypeService.save(type);
+        }
+    }
+
+    public void adjustBudgetAmounts(BudgetSubtypeService budgetSubtypeService, BudgetTypeService budgetTypeService, Movement oldMovement, MovementRequest newMovementRequest) throws BudgetExceededException {
+        double oldTotalValue = oldMovement.getTotalValue();
+        double newTotalValue = newMovementRequest.getTotalValue();
+        double valueDifference = newTotalValue - oldTotalValue;
+
+        if (oldMovement.getBudgetSubtype() != null) {
+            BudgetSubtype subtype = oldMovement.getBudgetSubtype();
+            BudgetType type = subtype.getBudgetType();
+
+            if (valueDifference > subtype.getAvailableFunds()) {
+                throw new BudgetExceededException(valueDifference, subtype.getAvailableFunds());
+            }
+
+            subtype.setAvailableFunds(subtype.getAvailableFunds() - oldTotalValue + newTotalValue);
+            budgetSubtypeService.save(subtype);
+
+            if (type != null) {
+                type.setAvailableFunds(type.getAvailableFunds() - oldTotalValue + newTotalValue);
+                budgetTypeService.save(type);
+            }
+        } else if (oldMovement.getBudgetType() != null) {
+            BudgetType type = oldMovement.getBudgetType();
+
+            if (valueDifference > type.getAvailableFunds()) {
+                throw new BudgetExceededException(valueDifference, type.getAvailableFunds());
+            }
+
+            type.setAvailableFunds(type.getAvailableFunds() - oldTotalValue + newTotalValue);
+            budgetTypeService.save(type);
+        }
+    }
+
+    public void removeMovementValueFromBudget(Movement movement, BudgetSubtypeService budgetSubtypeService, BudgetTypeService budgetTypeService) {
+        Double totalValue = movement.getTotalValue();
+
+        if (movement.getBudgetSubtype() != null) {
+            BudgetSubtype subtype = movement.getBudgetSubtype();
+            subtype.setAvailableFunds(subtype.getAvailableFunds() + totalValue);
+            budgetSubtypeService.save(subtype);
+
+            if (subtype.getBudgetType() != null) {
+                BudgetType type = subtype.getBudgetType();
+                type.setAvailableFunds(type.getAvailableFunds() + totalValue);
+                budgetTypeService.save(type);
+            }
+        } else if (movement.getBudgetType() != null) {
+            BudgetType type = movement.getBudgetType();
+            type.setAvailableFunds(type.getAvailableFunds() + totalValue);
+            budgetTypeService.save(type);
+        }
     }
 }

@@ -21,7 +21,11 @@ public enum ErrorMessage {
     MOVEMENT_ALREADY_EXISTS("MOVEMENT_ALREADY_EXISTS", "A movement with the document number '%s' already exists", CONFLICT),
     MOVEMENT_VALIDATION_ERROR("MOVEMENT_VALIDATION_ERROR", "Movement operation failed due to the following error/s: %s", CONFLICT),
     INVOICE_NOT_FOUND("INVOICE_NOT_FOUND", "Invoice not found with ID: %s", NOT_FOUND),
-    FAILED_TO_UPLOAD_FILE("FAILED_TO_UPLOAD_FILE", "File upload failed for Invoice ID: %s", CONFLICT),;
+    FAILED_TO_UPLOAD_FILE("FAILED_TO_UPLOAD_FILE", "File upload failed for Invoice ID: %s", CONFLICT),
+    INVOICE_ALREADY_EXISTS("INVOICE_ALREADY_EXISTS", "A invoice with the document number '%s' already exists", CONFLICT),
+    MOVEMENT_NOT_FOUND("MOVEMENT_NOT_FOUND", "Movement not found with ID: %s", NOT_FOUND),
+    MOVEMENTS_NOT_FOUND_BETWEEN_DATES("MOVEMENTS_NOT_FOUND_BETWEEN_DATES", "No movements found between the dates %s and %s", NOT_FOUND),
+    DOCUMENT_NUMBER_NOT_FOUND("DOCUMENT_NUMBER_NOT_FOUND", "Document number not found with number: %s", NOT_FOUND),;
 
     private final String errorCode;
     private final String message;

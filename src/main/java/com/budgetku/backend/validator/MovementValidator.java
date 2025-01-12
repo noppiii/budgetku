@@ -64,4 +64,23 @@ public class MovementValidator {
             throw new MovementValidationException(errorMessages);
         }
     }
+
+    public void validateMovementUpdate(MovementRequest movementRequest, MovementRepository repository, SupplierService supplierService, InvoiceService invoiceService) throws MovementValidationException {
+        List<String> errorMessages = new ArrayList<>();
+        log.info("Checking for existing document number (update): {}", movementRequest.getDocumentNumber());
+
+        if (repository.existsByDocumentNumberAndIdNot(movementRequest.getDocumentNumber(), movementRequest.getId())) {
+            log.error("Validation failed: Document number already exists. Document number: {}", movementRequest.getDocumentNumber());
+            errorMessages.add("a movement already exists with document number: " + movementRequest.getDocumentNumber());
+        }
+
+        log.info("Checking for existing movement with invoice ID (update): {}", movementRequest.getInvoiceId());
+
+        if (movementRequest.getInvoiceId() != null) {
+            if (repository.existsByInvoiceIdAndIdNot(movementRequest.getInvoiceId(), movementRequest.getId())) {
+                log.error("Validation failed: Movement already exists with invoice ID {}", movementRequest.getInvoiceId());
+                errorMessages.add("a movement already exists with invoice ID: " + movementRequest.getInvoiceId());
+            }
+        }
+    }
 }

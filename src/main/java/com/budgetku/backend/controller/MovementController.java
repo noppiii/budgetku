@@ -34,4 +34,16 @@ public class MovementController {
     public ResponseEntity<MovementResponse> createMovement(@Valid @RequestBody MovementRequest movementRequest) throws BudgetSubtypeNotFoundException, SupplierNotFoundException, MovementAlreadyExistsException, MovementValidationException, InvoiceNotFoundException, BudgetExceededException, BudgetTypeNotFoundException {
         return ResponseEntity.ok(movementService.create(movementRequest));
     }
+
+    @Operation(summary = "Update an existing movement",
+            description = "Updates an existing financial movement. The movement must exist, and all the related entities (supplier, invoice, budget) must be validated.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the movement"),
+            @ApiResponse(responseCode = "404", description = "Movement not found"),
+            @ApiResponse(responseCode = "400", description = "Bad request, invalid data")
+    })
+    @PutMapping("/update")
+    public ResponseEntity<MovementResponse> updateMovement(@Valid @RequestBody MovementRequest movementRequest) throws MovementNotFoundException, SupplierNotFoundException, BudgetSubtypeNotFoundException, MovementAlreadyExistsException, MovementValidationException, InvoiceNotFoundException, BudgetExceededException, BudgetTypeNotFoundException {
+        return ResponseEntity.ok(movementService.update(movementRequest));
+    }
 }
